@@ -4,29 +4,43 @@
   align-items: center;
   flex-flow: column;
   min-height: unset;
+
   @media screen and (min-width: 768px) {
     min-height: 100vh;
   }
+
   &__logo {
     margin-bottom: 2.5rem;
   }
+
   form {
     text-align: center;
-    // min-width: 400px;
+    width: 85%;
+    max-width: 400px;
+
     button {
       min-width: 150px;
     }
   }
+
   &__input {
+    width: 100%;
+
+    &>div {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
     input {
       width: 100%;
-      margin-bottom: 1.5rem;
     }
   }
+
   &__div {
     width: 85%;
     max-width: 500px;
   }
+
   &__btn {
     width: 25%;
     background-color: transparent;
@@ -37,12 +51,15 @@
     transition: all 200ms ease-in-out;
     display: flex;
     justify-content: center;
+
     &:hover {
       background-color: white;
     }
+
     img {
       height: 2.125rem;
     }
+
     &--wrapper {
       display: flex;
       justify-content: space-between;
@@ -51,11 +68,13 @@
       padding-right: 0.825rem;
     }
   }
+
   &__bottom {
     text-align: center;
     width: 90%;
     max-width: 500px;
     margin-top: 5rem;
+
     p {
       margin-bottom: 1.5rem;
     }

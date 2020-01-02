@@ -7,6 +7,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 html,
 body {
   color: $text-color;
@@ -15,6 +16,7 @@ body {
 }
 
 @media screen and (min-width: 768px) {
+
   html,
   body {
     font-size: 1rem;
@@ -38,12 +40,15 @@ img {
 h1 {
   font-size: 3rem;
 }
+
 h3 {
   font-size: 2rem;
 }
+
 h4 {
   font-size: 1.5rem;
 }
+
 h5 {
   font-size: 1rem;
 }
@@ -56,6 +61,7 @@ select {
   border-radius: 4px;
   font-size: 1rem;
 }
+
 select {
   background: white;
   -webkit-appearance: none;
@@ -70,6 +76,7 @@ section {
 .ml-auto {
   margin-left: auto;
 }
+
 .text-right {
   text-align: right;
 }
@@ -83,6 +90,14 @@ section {
 //   }
 // }
 
+button[disabled],
+button[disabled]:hover {
+  background: #fafafa;
+  border-color: #c4c4c4;
+  display: inline-flex;
+  justify-content: center;
+}
+
 .btn {
   background: white;
   border: 2px solid $text-color;
@@ -91,54 +106,58 @@ section {
   cursor: pointer;
   transition: all 200ms ease-in-out;
   font-size: 1rem;
+
   &__primary {
-    background: linear-gradient(
-      270deg,
-      #258c45 0%,
-      #2b8c49 10.59%,
-      #82c482 54.73%,
-      #b3d744 85.48%,
-      #c6de2c 100%
-    );
+    background: linear-gradient(270deg,
+        #258c45 0%,
+        #2b8c49 10.59%,
+        #82c482 54.73%,
+        #b3d744 85.48%,
+        #c6de2c 100%);
     color: $white;
     border-color: #b3d744;
+
     &:hover {
       background: $white;
       color: $primary;
       border-color: $primary;
     }
+
     &--outline {
       background: $white;
       color: $primary;
       border-color: $primary;
+
       &:hover {
-        background: linear-gradient(
-          270deg,
-          #258c45 0%,
-          #2b8c49 10.59%,
-          #82c482 54.73%,
-          #b3d744 85.48%,
-          #c6de2c 100%
-        );
+        background: linear-gradient(270deg,
+            #258c45 0%,
+            #2b8c49 10.59%,
+            #82c482 54.73%,
+            #b3d744 85.48%,
+            #c6de2c 100%);
         color: $white;
         // border: none;
       }
     }
   }
+
   &__green {
     background-color: $primary;
     color: $white;
     border-color: $primary;
+
     &:hover {
       background: $white;
       color: $primary;
       border-color: $primary;
     }
   }
+
   &__transparent {
     background-color: transparent;
     // color: $white;
     border-color: transparent;
+
     &:hover {
       background: transparent;
       color: $primary;
@@ -150,4 +169,11 @@ section {
 .copyright {
   background: $primary;
   color: $white;
+}
+
+.form {
+  &-error {
+    color: $error;
+    font-size: .825rem;
+  }
 }

@@ -10,65 +10,75 @@ import { BecomePootaaComponent } from "./become-pootaa/become-pootaa.component";
 import { HireSuccessComponent } from "./hire-success/hire-success.component";
 import { HirePootaaComponent } from "./hire-pootaa/hire-pootaa.component";
 import { PackageListingsComponent } from "./package-listings/package-listings.component";
+import { EditProfileComponent } from "./edit-profile/edit-profile.component";
+import { LogoutComponent } from "./logout/logout.component";
 
 const routes: Routes = [
-  {
-    path: "",
-    component: HomeComponent
-  },
-  {
-    path: "about",
-    component: AboutComponent
-  },
-  {
-    path: "contact",
-    component: ContactComponent
-  },
-  {
-    path: "auth",
-    component: AuthLayoutComponent,
-    children: [
-      {
+    {
         path: "",
-        redirectTo: "login",
-        pathMatch: "full"
-      },
-      {
-        path: "login",
-        component: LoginComponent
-      },
-      {
-        path: "register",
-        component: RegisterComponent
-      },
-      {
-        path: "become-a-pootaa",
-        component: BecomePootaaComponent
-      }
-    ]
-  },
-  {
-    path: "hire-a-pootaa",
-    component: HirePootaaComponent
-  },
-  {
-    path: "hire-success",
-    component: HireSuccessComponent
-  },
-  {
-    path: "listings",
-    component: PackageListingsComponent
-  },
-  {
-    path: "*",
-    component: HomeComponent
-  }
+        component: HomeComponent
+    },
+    {
+        path: "about",
+        component: AboutComponent
+    },
+    {
+        path: "contact",
+        component: ContactComponent
+    },
+    {
+        path: "logout",
+        component: LogoutComponent
+    },
+    {
+        path: "auth",
+        component: AuthLayoutComponent,
+        children: [
+            {
+                path: "",
+                redirectTo: "login",
+                pathMatch: "full"
+            },
+            {
+                path: "login",
+                component: LoginComponent
+            },
+            {
+                path: "register",
+                component: RegisterComponent
+            },
+            {
+                path: "become-a-pootaa",
+                component: BecomePootaaComponent
+            }
+        ]
+    },
+    {
+        path: "hire-a-pootaa",
+        component: HirePootaaComponent
+    },
+    {
+        path: "hire-success",
+        component: HireSuccessComponent
+    },
+    {
+        path: "listings",
+        component: PackageListingsComponent
+    },
+    {
+        path: "edit-profile",
+        component: EditProfileComponent
+    },
+    {
+        path: "*",
+        component: HomeComponent
+    }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { scrollPositionRestoration: "enabled" })
-  ],
-  exports: [RouterModule]
+    imports: [
+        RouterModule.forRoot(routes, { scrollPositionRestoration: "enabled" })
+    ],
+    exports: [RouterModule]
 })
 export class AppRoutingModule {}

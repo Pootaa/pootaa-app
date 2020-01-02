@@ -1,0 +1,46 @@
+<app-layout>
+    <section class="landing">
+        <h1>
+            Edit Profile
+        </h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elitlorem ipsum dolor sit amet, consectetur adipiscing
+            elit lorem
+            ipsum dolor sit ame
+        </p>
+    </section>
+    <section class="register">
+        <form>
+            <div class="register__input">
+                <input type="text" name="firstname" placeholder="First Name" />
+                <input type="text" name="lastname" placeholder="Last Name" />
+            </div>
+            <div class="register__input">
+                <input type="text" name="state" placeholder="State of Origin" />
+                <input type="text" name="address" placeholder="LGA" />
+            </div>
+            <div class="register__input">
+                <input type="text" name="address" placeholder="Address" />
+                <input type="text" name="busstop" placeholder="Nearest Busstop" />
+            </div>
+            <div class="register__input">
+                <input type="number" name="phone" placeholder="Phone Number" />
+                <input type="number" name="phone2" placeholder="Phone Number 2" />
+            </div>
+            <div class="register__input">
+                <input type="number" name="whatsapp" placeholder="Whatsapp Number" />
+                <input type="email" name="email" placeholder="Email" />
+            </div>
+            <div class="register__input">
+                <input type="text" name="bankname" placeholder="Bank Name" />
+                <input type="number" name="accountnumber" placeholder="Account Number" />
+            </div>
+            <div class="register__sign-in">
+                <button class="btn btn__primary" [routerLink]="['/auth/login']">
+                    Save
+                </button>
+            </div>
+        </form>
+    </section>
+
+</app-layout>
