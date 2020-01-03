@@ -12,6 +12,7 @@ import { HirePootaaComponent } from "./hire-pootaa/hire-pootaa.component";
 import { PackageListingsComponent } from "./package-listings/package-listings.component";
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
 import { LogoutComponent } from "./logout/logout.component";
+import { AuthModuleService } from "./auth-module.service";
 
 const routes: Routes = [
     {
@@ -55,7 +56,8 @@ const routes: Routes = [
     },
     {
         path: "hire-a-pootaa",
-        component: HirePootaaComponent
+        component: HirePootaaComponent,
+        canActivate: [AuthModuleService]
     },
     {
         path: "hire-success",
@@ -70,7 +72,9 @@ const routes: Routes = [
         component: EditProfileComponent
     },
     {
-        path: "*",
+        path: "**",
+        redirectTo: "",
+        pathMatch: "full",
         component: HomeComponent
     }
 ];

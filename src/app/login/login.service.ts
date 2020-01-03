@@ -78,6 +78,12 @@ export class LoginService {
         );
     }
 
+    logout() {
+        localStorage.removeItem("TOKEN");
+        this.isLoggedSubject.next(false);
+        this.userSubject.next(<User>{});
+    }
+
     constructor(
         private http: HttpService,
         private router: Router,

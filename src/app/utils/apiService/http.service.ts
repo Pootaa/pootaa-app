@@ -22,11 +22,13 @@ export class HttpService {
     post<T>(url, data): Observable<T> {
         let tempUrl = url;
         const headers = new HttpHeaders();
-        if (url[0] === "/") {
-            tempUrl = url.substr(1);
+        if (url.startsWith("http")) {
+            tempUrl = url;
+        } else if (url[0] === "/") {
+            tempUrl = this.baseURL + url.substr(1);
         }
         this.createAuthorizationHeader(headers);
-        return this.http.post<T>(`${this.baseURL + tempUrl}`, data, {
+        return this.http.post<T>(tempUrl, data, {
             headers
         });
     }
@@ -34,22 +36,26 @@ export class HttpService {
     patch<T>(url, data): Observable<T> {
         let tempUrl = url;
         const headers = new HttpHeaders();
-        if (url[0] === "/") {
-            tempUrl = url.substr(1);
+        if (url.startsWith("http")) {
+            tempUrl = url;
+        } else if (url[0] === "/") {
+            tempUrl = this.baseURL + url.substr(1);
         }
         this.createAuthorizationHeader(headers);
-        return this.http.patch<T>(`${this.baseURL + tempUrl}`, data, {
+        return this.http.patch<T>(tempUrl, data, {
             headers
         });
     }
 
-    get<T>(url, params): Observable<T> {
+    get<T>(url): Observable<T> {
         let tempUrl = url;
         const headers = new HttpHeaders();
-        if (url[0] === "/") {
-            tempUrl = url.substr(1);
+        if (url.startsWith("http")) {
+            tempUrl = url;
+        } else if (url[0] === "/") {
+            tempUrl = this.baseURL + url.substr(1);
         }
         this.createAuthorizationHeader(headers);
-        return this.http.get<T>(`${this.baseURL + tempUrl}`, { headers });
+        return this.http.get<T>(tempUrl, { headers });
     }
 }
