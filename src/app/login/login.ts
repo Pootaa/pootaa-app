@@ -32,6 +32,7 @@ interface RegisterCredentials {
     phone: Number;
     email: String;
     password: String;
+    state: String;
 }
 
 interface RegisterResponse {

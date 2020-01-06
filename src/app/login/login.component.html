@@ -37,7 +37,7 @@
                 <input
                     type="password"
                     #password="ngModel"
-                    minlength="5"
+                    minlength="4"
                     name="password"
                     ngModel
                     required
@@ -57,7 +57,7 @@
                         password.invalid &&
                         loginForm.controls.password?.errors?.minlength
                     "
-                    >Password should be at least 5 characters</span
+                    >Password should be at least 4 characters</span
                 >
             </div>
         </div>
@@ -72,6 +72,17 @@
                     height="24px"
                 />
             </button>
+        </div>
+        <br />
+        <div>
+            <small
+                >Don't have an account?&nbsp;<a
+                    [routerLink]="['/auth/register']"
+                    class="primary underline"
+                    >Sign Up</a
+                >
+                instead</small
+            >
         </div>
     </form>
     <div class="login__bottom">

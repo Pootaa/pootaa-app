@@ -34,8 +34,7 @@ export class LoginService {
             resp => {
                 if (resp.success) {
                     localStorage.setItem("TOKEN", resp.token);
-                    this.isLoggedSubject.next(true);
-                    this.userSubject.next(resp.data);
+                    this.setUser(resp.data);
                     this.router.navigate([""]);
                 } else {
                     this.errorHandler.setError(resp.message, "login");
@@ -59,8 +58,7 @@ export class LoginService {
             resp => {
                 if (resp.success) {
                     localStorage.setItem("TOKEN", resp.token);
-                    this.isLoggedSubject.next(true);
-                    this.userSubject.next(resp.data);
+                    this.setUser(resp.data);
                     this.router.navigate([""]);
                 } else {
                     this.errorHandler.setError(resp.message, "register");
@@ -78,8 +76,15 @@ export class LoginService {
         );
     }
 
+    setUser(data) {
+        localStorage.setItem("USERDATA", JSON.stringify(data));
+        this.isLoggedSubject.next(true);
+        this.userSubject.next(data);
+    }
+
     logout() {
         localStorage.removeItem("TOKEN");
+        localStorage.removeItem("USERDATA");
         this.isLoggedSubject.next(false);
         this.userSubject.next(<User>{});
     }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthTextService } from "../auth-text.service";
 import { RegisterService } from "../register/register.service";
-import { StatesResponse } from "../register/register";
 import * as allBanks from "../utils/banks.json";
 
 @Component({
@@ -10,7 +9,7 @@ import * as allBanks from "../utils/banks.json";
     styleUrls: ["./become-pootaa.component.scss"]
 })
 export class BecomePootaaComponent implements OnInit {
-    states: StatesResponse[];
+    states: [];
     lgas: String[];
     banks: [] = (allBanks as any).default;
     loading: Boolean;

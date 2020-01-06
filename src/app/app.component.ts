@@ -9,6 +9,11 @@ import { LoginService } from "./login/login.service";
 export class AppComponent {
     constructor(private loginService: LoginService) {}
     ngOnInit() {
+        const userData = localStorage.getItem("USERDATA");
+        if (userData) {
+            this.loginService.setUser(JSON.parse(userData));
+            return true;
+        }
         this.loginService.logout();
     }
 }

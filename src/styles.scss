@@ -81,6 +81,14 @@ section {
   text-align: right;
 }
 
+.primary {
+  color: $primary
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 // .active-link {
 //   color: $white;
 //   background: $primary;
@@ -92,7 +100,9 @@ section {
 
 button[disabled],
 button[disabled]:hover {
-  background: #fafafa;
+  // background: #fafafa;
+  filter: saturate(0);
+  cursor: no-drop;
   border-color: #c4c4c4;
   display: inline-flex;
   justify-content: center;
