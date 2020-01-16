@@ -16,8 +16,8 @@ export class RegisterService {
     private statesSubject = new BehaviorSubject<[]>([]);
     public states: Observable<[]> = this.statesSubject.asObservable();
 
-    private lgaSubject = new BehaviorSubject<String[]>([]);
-    public lgas: Observable<String[]> = this.lgaSubject.asObservable();
+    private lgaSubject = new BehaviorSubject<string[]>([]);
+    public lgas: Observable<string[]> = this.lgaSubject.asObservable();
 
     register(data: RegisterCredentials) {
         this.loadingSubject.next(true);
@@ -25,7 +25,7 @@ export class RegisterService {
             resp => {
                 if (resp.success) {
                     localStorage.setItem("TOKEN", resp.token);
-                    this.loginService.setUser(resp);
+                    this.loginService.setUser(resp.data);
                     this.router.navigate([""]);
                 } else {
                     console.log(resp.message);
@@ -54,7 +54,7 @@ export class RegisterService {
 
     getLGAs(state) {
         this.http
-            .get<String[]>(
+            .get<string[]>(
                 `https://locationsng-api.herokuapp.com/api/v1/states/${state}/lgas`
             )
             .subscribe(resp => {

@@ -1,7 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -21,33 +21,39 @@ import { HeaderLayoutComponent } from "./header-layout/header-layout.component";
 import { PackageCardsComponent } from "./package-cards/package-cards.component";
 import { PackageListingsComponent } from "./package-listings/package-listings.component";
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
-import { ErrorBlockComponent } from './error-block/error-block.component';
-import { LogoutComponent } from './logout/logout.component';
+import { ErrorBlockComponent } from "./error-block/error-block.component";
+import { LogoutComponent } from "./logout/logout.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    FooterComponent,
-    AboutComponent,
-    CitiesComponent,
-    ContactComponent,
-    AuthLayoutComponent,
-    RegisterComponent,
-    LoginComponent,
-    BecomePootaaComponent,
-    HireSuccessComponent,
-    HirePootaaComponent,
-    HeaderComponent,
-    HeaderLayoutComponent,
-    PackageCardsComponent,
-    PackageListingsComponent,
-    EditProfileComponent,
-    ErrorBlockComponent,
-    LogoutComponent
-  ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        FooterComponent,
+        AboutComponent,
+        CitiesComponent,
+        ContactComponent,
+        AuthLayoutComponent,
+        RegisterComponent,
+        LoginComponent,
+        BecomePootaaComponent,
+        HireSuccessComponent,
+        HirePootaaComponent,
+        HeaderComponent,
+        HeaderLayoutComponent,
+        PackageCardsComponent,
+        PackageListingsComponent,
+        EditProfileComponent,
+        ErrorBlockComponent,
+        LogoutComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}

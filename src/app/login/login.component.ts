@@ -10,7 +10,8 @@ import { ErrorHandlerService } from "../utils/errors/error-handler.service";
 })
 export class LoginComponent implements OnInit {
     loading: Boolean;
-    errorType: String;
+    errorType: string;
+    pootaaAgent: Boolean = false;
     constructor(
         private titleService: AuthTextService,
         private loginService: LoginService,
@@ -21,9 +22,17 @@ export class LoginComponent implements OnInit {
 
     login(form) {
         if (form.status === "VALID") {
-            this.loginService.login(form.value);
+            if (this.pootaaAgent) {
+                this.loginService.loginAsAgent(form.value);
+            } else {
+                this.loginService.login(form.value);
+            }
         }
         return true;
+    }
+
+    switchLogin(isAgent) {
+        this.pootaaAgent = isAgent;
     }
 
     ngOnInit() {

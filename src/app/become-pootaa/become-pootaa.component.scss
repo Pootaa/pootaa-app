@@ -4,44 +4,64 @@
   align-items: center;
   flex-flow: column;
   min-height: 100vh;
+
   &__logo {
     margin-bottom: 2.5rem;
   }
+
   form {
     text-align: center;
     max-width: 800px;
     width: 95%;
+
     button {
       min-width: 150px;
     }
   }
+
   &__input {
     display: flex;
     justify-content: space-between;
     flex-flow: column;
-    input,
-    select {
+
+    &>div {
+
       width: 100%;
       margin-bottom: 1.5rem;
+      text-align: left;
+
+      input,
+      select {
+        width: 100%
+      }
+
+      @media screen and (min-width: 568px) {
+        width: 48%;
+      }
     }
+
     select {
       background: white;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
     }
+
     @media screen and (min-width: 568px) {
       flex-flow: row wrap;
+
       input,
       select {
         width: 48%;
       }
     }
   }
+
   &__div {
     width: 85%;
     max-width: 500px;
   }
+
   &__btn {
     width: 25%;
     background-color: transparent;
@@ -52,12 +72,15 @@
     transition: all 200ms ease-in-out;
     display: flex;
     justify-content: center;
+
     &:hover {
       background-color: white;
     }
+
     img {
       height: 2.125rem;
     }
+
     &--wrapper {
       display: flex;
       justify-content: space-between;
@@ -66,22 +89,33 @@
       padding-right: 0.825rem;
     }
   }
+
   &__bottom {
     text-align: center;
     width: 90%;
     max-width: 500px;
     margin-top: 5rem;
+
     p {
       margin-bottom: 1.5rem;
     }
   }
+
   &__upload {
     width: 100%;
     margin-bottom: 1.5rem;
     position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &.text-center {
+      align-items: center;
+    }
+
     @media screen and (min-width: 568px) {
       width: 48%;
     }
+
     input {
       width: 100%;
       margin-bottom: 0;
@@ -94,6 +128,7 @@
       padding: 0;
       height: 2.5rem;
     }
+
     label {
       line-height: 2.5rem;
       display: flex;
@@ -102,12 +137,14 @@
       margin-bottom: 0.625rem;
     }
   }
+
   &__caution {
     display: flex;
     align-items: flex-start;
     padding-left: 12px;
     padding-right: 12px;
     text-align: left;
+
     img {
       margin-right: 6px;
     }
@@ -118,4 +155,10 @@
   color: black;
   opacity: 0.5;
   font-size: 12px;
+}
+
+.image-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
 }

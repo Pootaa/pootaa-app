@@ -3,7 +3,7 @@ interface User {
     email: string;
     first_name: string;
     last_name: string;
-    phone?: Number;
+    phone?: number;
 }
 
 interface LoginResponse {
@@ -25,14 +25,15 @@ interface LoginCredentials {
 }
 
 interface RegisterCredentials {
-    first_name: String;
-    last_name: String;
-    middle_name?: String;
-    address: String;
-    phone: Number;
-    email: String;
-    password: String;
-    state: String;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+    address: string;
+    phone: number;
+    email: string;
+    password: string;
+    state: string;
+    image: File[];
 }
 
 interface RegisterResponse {
@@ -45,7 +46,7 @@ interface RegisterResponse {
         email: string;
         first_name: string;
         last_name: string;
-        phone: Number;
+        phone: number;
     };
 }
 

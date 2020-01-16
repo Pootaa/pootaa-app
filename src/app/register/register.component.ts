@@ -11,7 +11,7 @@ import { ErrorHandlerService } from "../utils/errors/error-handler.service";
 export class RegisterComponent implements OnInit {
     loading: Boolean;
     states: [];
-    errorType: String;
+    errorType: string;
     passwordError: Boolean;
 
     register(form) {

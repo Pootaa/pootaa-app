@@ -2,6 +2,10 @@
     <div class="login__logo">
         <img src="assets/img/pootaa-color.svg" alt="Pootaa" />
     </div>
+    <div *ngIf="pootaaAgent">
+        <h4>Pootaa Agent Login</h4>
+        <br />
+    </div>
     <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
         <div class="login__input">
             <div>
@@ -83,6 +87,22 @@
                 >
                 instead</small
             >
+        </div>
+        <div>
+            <small *ngIf="!pootaaAgent"
+                ><a
+                    (click)="switchLogin(true)"
+                    class="primary underline pointer"
+                    >Sign in as an agent</a
+                >
+            </small>
+            <small *ngIf="pootaaAgent"
+                ><a
+                    (click)="switchLogin(false)"
+                    class="primary underline pointer"
+                    >Sign in a user</a
+                >
+            </small>
         </div>
     </form>
     <div class="login__bottom">

@@ -52,6 +52,30 @@ export class LoginService {
         );
     }
 
+    loginAsAgent(data: LoginCredentials) {
+        this.loadingSubject.next(true);
+        this.http.post<LoginResponse>("/users/pootaa/sign_in", data).subscribe(
+            resp => {
+                if (resp.success) {
+                    localStorage.setItem("TOKEN", resp.token);
+                    this.setUser(resp.data);
+                    this.router.navigate([""]);
+                } else {
+                    this.errorHandler.setError(resp.message, "login");
+                }
+            },
+            err => {
+                this.errorHandler.setError(
+                    "Temporarily Unavailable. Try again later",
+                    "login"
+                );
+            },
+            () => {
+                this.loadingSubject.next(false);
+            }
+        );
+    }
+
     register(data: RegisterCredentials) {
         this.loadingSubject.next(true);
         this.http.post<RegisterResponse>("/users/sign_up", data).subscribe(
@@ -74,6 +98,32 @@ export class LoginService {
                 this.loadingSubject.next(false);
             }
         );
+    }
+
+    registerAsAgent(data: FormData) {
+        this.loadingSubject.next(true);
+        this.http
+            .post<RegisterResponse>("/users/pootaa/sign_up", data)
+            .subscribe(
+                resp => {
+                    if (resp.success) {
+                        localStorage.setItem("TOKEN", resp.token);
+                        this.setUser(resp.data);
+                        this.router.navigate([""]);
+                    } else {
+                        this.errorHandler.setError(resp.message, "register");
+                    }
+                },
+                err => {
+                    this.errorHandler.setError(
+                        "Temporarily Unavailable. Try again later",
+                        "register"
+                    );
+                },
+                () => {
+                    this.loadingSubject.next(false);
+                }
+            );
     }
 
     setUser(data) {

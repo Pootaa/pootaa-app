@@ -2,69 +2,461 @@
     <div class="become__logo">
         <img src="assets/img/pootaa-color.svg" alt="Pootaa" />
     </div>
-    <form>
+    <form
+        #registerForm="ngForm"
+        (ngSubmit)="register(registerForm)"
+        enctype="multipart/form-data"
+    >
         <div class="become__input">
-            <div class="become__upload">
-                <input type="file" name="photo" />
+            <div class="become__upload" *ngIf="!photoUploadFile">
+                <input
+                    type="file"
+                    name="photo"
+                    (input)="photoUpload($event)"
+                    accept=".png, .jpg, .jpeg"
+                />
                 <label for="photo" class="caution">+ Upload Photo</label>
                 <div class="caution become__caution">
                     <img src="assets/img/info.svg" alt="info" />Your face must
-                    be visible, max size 1MB
+                    be visible, max size 5MB
                 </div>
+                <span
+                    class="form-error"
+                    *ngIf="!photoUploadFile && registerForm.submitted"
+                    >Photo Image is required</span
+                >
+                <span class="form-error" *ngIf="photoUploadError"
+                    >Image size should be less than 5MB</span
+                >
             </div>
-            <div class="become__upload">
-                <input type="file" name="id" />
+            <div class="become__upload text-center" *ngIf="photoUploadFile">
+                <img
+                    [src]="photoUploadFile"
+                    alt="Pootaa Photo"
+                    class="image-preview"
+                />
+                <br />
+                <a class="pointer underline" (click)="removePhoto()">
+                    Remove
+                </a>
+            </div>
+            <div class="become__upload" *ngIf="!idUploadFile">
+                <input
+                    type="file"
+                    name="id"
+                    (input)="idUpload($event)"
+                    accept=".png, .jpg, .jpeg"
+                />
                 <label for="id" class="caution">+ Upload ID</label>
                 <div class="caution become__caution">
                     <img src="assets/img/info.svg" alt="info" />Voter’s card,
                     National identity card, or driver’s license
                 </div>
+                <span
+                    class="form-error"
+                    *ngIf="!idUploadFile && registerForm.submitted"
+                    >ID Image is required</span
+                >
+                <span class="form-error" *ngIf="idUploadError"
+                    >Image size should be less than 5MB</span
+                >
+            </div>
+            <div class="become__upload text-center" *ngIf="idUploadFile">
+                <img
+                    [src]="idUploadFile"
+                    alt="Pootaa ID"
+                    class="image-preview"
+                />
+                <br />
+                <a class="pointer underline" (click)="removeID()">
+                    Remove
+                </a>
             </div>
         </div>
         <div class="become__input">
-            <input type="text" name="firstname" placeholder="First Name" />
-            <input type="text" name="lastname" placeholder="Last Name" />
+            <div>
+                <input
+                    type="text"
+                    name="first_name"
+                    #first_name="ngModel"
+                    ngModel
+                    required
+                    placeholder="First Name"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        first_name.invalid &&
+                        registerForm.controls.first_name?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="last_name"
+                    #last_name="ngModel"
+                    ngModel
+                    required
+                    placeholder="Last Name"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        last_name.invalid &&
+                        registerForm.controls.last_name?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="become__input">
-            <select name="state" (change)="selectLGA($event)">
-                <option [value]="state.name" *ngFor="let state of states">{{
-                    state.name
-                }}</option>
-            </select>
-            <select name="lga" [disabled]="loading">
-                <option [value]="lga" *ngFor="let lga of lgas">{{
-                    lga
-                }}</option>
-            </select>
+            <div>
+                <input
+                    type="email"
+                    name="email"
+                    #email="ngModel"
+                    ngModel
+                    required
+                    placeholder="Email Address"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        email.invalid &&
+                        registerForm.controls.email?.errors?.required
+                    "
+                    >Field is required</span
+                >
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        email.invalid &&
+                        registerForm.controls.email?.errors?.email
+                    "
+                    >Invalid email</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="what_you_drive"
+                    #what_you_drive="ngModel"
+                    ngModel
+                    placeholder="What do you drive? Bike, Car, Bus..."
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        what_you_drive.invalid &&
+                        registerForm.controls.what_you_drive?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="become__input">
-            <input type="text" name="address" placeholder="Address" />
-            <input type="text" name="busstop" placeholder="Nearest Busstop" />
+            <div>
+                <input
+                    type="password"
+                    #password="ngModel"
+                    ngModel
+                    name="password"
+                    minlength="4"
+                    placeholder="Create Password"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        password.invalid &&
+                        registerForm.controls.password?.errors?.required
+                    "
+                    >Field is required</span
+                ><span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        password.invalid &&
+                        registerForm.controls.password?.errors?.minlength
+                    "
+                    >Password should be at least 4 characters</span
+                >
+            </div>
+            <div>
+                <input
+                    type="password"
+                    #confirmPassword="ngModel"
+                    ngModel
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        confirmPassword.invalid &&
+                        registerForm.controls.confirmPassword?.errors?.required
+                    "
+                    >Field is required</span
+                >
+                <span class="form-error" *ngIf="passwordError"
+                    >Mismatched Passwords</span
+                >
+            </div>
         </div>
         <div class="become__input">
-            <input type="number" name="phone" placeholder="Phone Number 1" />
-            <input type="number" name="phone2" placeholder="Phone Number 2" />
+            <div>
+                <select
+                    name="state"
+                    (change)="selectLGA($event)"
+                    #state="ngModel"
+                    required
+                    ngModel
+                >
+                    <option value="" disabled selected hidden
+                        >-Select State-</option
+                    >
+                    <option [value]="state.name" *ngFor="let state of states">{{
+                        state.name
+                    }}</option>
+                </select>
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        state.invalid &&
+                        registerForm.controls.state?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <select name="lga" [disabled]="loading" #lga required ngModel>
+                    <option value="" disabled selected hidden
+                        >-Select LGA-</option
+                    >
+                    <option [value]="lga" *ngFor="let lga of lgas">{{
+                        lga
+                    }}</option>
+                </select>
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        lga.invalid &&
+                        registerForm.controls.lga?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="become__input">
-            <input
-                type="number"
-                name="whatsapp"
-                placeholder="Whatsapp Number"
-            />
-            <input type="email" name="email" placeholder="Email Address" />
+            <div>
+                <input
+                    type="text"
+                    name="address"
+                    #address="ngModel"
+                    ngModel
+                    placeholder="Home Address"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        address.invalid &&
+                        registerForm.controls.address?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="bus_stop"
+                    #bus_stop="ngModel"
+                    ngModel
+                    placeholder="Nearest Busstop"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        bus_stop.invalid &&
+                        registerForm.controls.bus_stop?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="become__input">
-            <select name="banks">
-                <option [value]="bank.code" *ngFor="let bank of banks">{{
-                    bank.name
-                }}</option>
-            </select>
-            <input type="text" name="account" placeholder="Account Number" />
+            <div>
+                <input
+                    type="number"
+                    name="phone"
+                    ngModel
+                    #phone="ngModel"
+                    placeholder="Phone Number"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        phone.invalid &&
+                        registerForm.controls.phone?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="number"
+                    ngModel
+                    #whatsapp_phone="ngModel"
+                    name="whatsapp_phone"
+                    placeholder="Whatsapp Phone"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        whatsapp_phone.invalid &&
+                        registerForm.controls.whatsapp_phone?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
+        <div class="become__input">
+            <div>
+                <input
+                    type="text"
+                    name="enough_space"
+                    #enough_space="ngModel"
+                    ngModel
+                    required
+                    placeholder="Do you have enough space"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        enough_space.invalid &&
+                        registerForm.controls.enough_space?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="edu_qualification"
+                    #edu_qualification="ngModel"
+                    ngModel
+                    placeholder="Education Qualification"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        edu_qualification.invalid &&
+                        registerForm.controls.edu_qualification?.errors
+                            ?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+        </div>
+        <div class="become__input">
+            <div>
+                <select name="bank_name" #bank_name="ngModel" ngModel required>
+                    <option value="" disabled selected hidden
+                        >-Select Bank-</option
+                    >
+                    <option [value]="bank.code" *ngFor="let bank of banks">{{
+                        bank.name
+                    }}</option>
+                </select>
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        bank_name.invalid &&
+                        registerForm.controls.bank_name?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="account_number"
+                    placeholder="Account Number"
+                    required
+                    ngModel
+                    #account_number="ngModel"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        account_number.invalid &&
+                        registerForm.controls.account_number?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+        </div>
+        <div class="become__input">
+            <div>
+                <input
+                    type="text"
+                    name="live_alone"
+                    placeholder="Do you live alone?"
+                    required
+                    ngModel
+                    #live_alone="ngModel"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        live_alone.invalid &&
+                        registerForm.controls.live_alone?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+        </div>
+        <app-error-block *ngIf="errorType === 'register'"></app-error-block>
         <div class="become__sign-in">
-            <button class="btn btn__primary" [routerLink]="['/auth/login']">
+            <button class="btn btn__primary" type="submit">
                 Send
             </button>
+        </div>
+        <br />
+        <div>
+            <small
+                >Don't have an account yet?&nbsp;<a
+                    [routerLink]="['/auth/register']"
+                    class="primary underline pointer"
+                    >Sign Up</a
+                >&nbsp;instead
+            </small>
         </div>
     </form>
 </section>
