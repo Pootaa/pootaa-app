@@ -2,35 +2,215 @@
     <div class="register__logo">
         <img src="assets/img/pootaa-color.svg" alt="Pootaa" />
     </div>
-    <form>
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
         <div class="register__input">
-            <input type="text" name="firstname" placeholder="First Name" />
-            <input type="text" name="lastname" placeholder="Last Name" />
+            <div>
+                <input
+                    type="text"
+                    name="first_name"
+                    #first_name="ngModel"
+                    ngModel
+                    required
+                    placeholder="First Name"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        first_name.invalid &&
+                        registerForm.controls.first_name?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="last_name"
+                    #last_name="ngModel"
+                    ngModel
+                    required
+                    placeholder="Last Name"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        last_name.invalid &&
+                        registerForm.controls.last_name?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="register__input">
-            <input type="number" name="phone" placeholder="Phone Number" />
-            <input type="email" name="email" placeholder="Email Address" />
+            <div>
+                <input
+                    type="number"
+                    name="phone"
+                    #phone="ngModel"
+                    ngModel
+                    required
+                    placeholder="Phone Number"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        phone.invalid &&
+                        registerForm.controls.phone?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="email"
+                    name="email"
+                    #email="ngModel"
+                    ngModel
+                    required
+                    placeholder="Email Address"
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        email.invalid &&
+                        registerForm.controls.email?.errors?.required
+                    "
+                    >Field is required</span
+                >
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        email.invalid &&
+                        registerForm.controls.email?.errors?.email
+                    "
+                    >Invalid email</span
+                >
+            </div>
         </div>
         <div class="register__input">
-            <select name="state">
-                <option [value]="state.name" *ngFor="let state of states">{{
-                    state.name
-                }}</option>
-            </select>
-            <input type="text" name="address" placeholder="Home Address" />
+            <div>
+                <select name="state" #state="ngModel" ngModel required>
+                    <option [value]="state.name" *ngFor="let state of states">{{
+                        state.name
+                    }}</option>
+                </select>
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        state.invalid &&
+                        registerForm.controls.state?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
+            <div>
+                <input
+                    type="text"
+                    name="address"
+                    #address="ngModel"
+                    ngModel
+                    placeholder="Home Address"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        address.invalid &&
+                        registerForm.controls.address?.errors?.required
+                    "
+                    >Field is required</span
+                >
+            </div>
         </div>
         <div class="register__input">
-            <input type="password" name="password" placeholder="Password" />
-            <input
-                type="password"
-                name="password"
-                placeholder="Confirm Password"
-            />
+            <div>
+                <input
+                    type="password"
+                    #password="ngModel"
+                    ngModel
+                    name="password"
+                    minlength="4"
+                    placeholder="Password"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        password.invalid &&
+                        registerForm.controls.password?.errors?.required
+                    "
+                    >Field is required</span
+                ><span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        password.invalid &&
+                        registerForm.controls.password?.errors?.minlength
+                    "
+                    >Password should be at least 4 characters</span
+                >
+            </div>
+            <div>
+                <input
+                    type="password"
+                    #confirmPassword="ngModel"
+                    ngModel
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    required
+                />
+                <span
+                    class="form-error"
+                    *ngIf="
+                        registerForm.submitted &&
+                        confirmPassword.invalid &&
+                        registerForm.controls.confirmPassword?.errors?.required
+                    "
+                    >Field is required</span
+                >
+                <span class="form-error" *ngIf="passwordError"
+                    >Mismatched Passwords</span
+                >
+            </div>
         </div>
+        <app-error-block *ngIf="errorType === 'register'"></app-error-block>
         <div class="register__sign-in">
-            <button class="btn btn__primary" [routerLink]="['/auth/login']">
-                Sign Up
+            <button class="btn btn__primary" type="submit" [disabled]="loading">
+                <span *ngIf="!loading">Sign Up</span>
+                <img
+                    *ngIf="loading"
+                    src="assets/img/loading.gif"
+                    alt="Loading..."
+                    height="24px"
+                />
             </button>
+        </div>
+        <br />
+        <div>
+            <small
+                >Already have an account?&nbsp;<a
+                    [routerLink]="['/auth/login']"
+                    class="primary underline"
+                    >Sign In</a
+                ></small
+            >
+        </div>
+        <div>
+            <small
+                ><a
+                    [routerLink]="['/auth/become-a-pootaa']"
+                    class="primary underline pointer"
+                    >Become a pootaa agent</a
+                >
+            </small>
         </div>
     </form>
     <div class="register__bottom">

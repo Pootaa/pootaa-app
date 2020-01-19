@@ -15,14 +15,14 @@ import { Observable, BehaviorSubject } from "rxjs";
     providedIn: "root"
 })
 export class LoginService {
-    private loadingSubject = new BehaviorSubject<Boolean>(false);
-    public loading: Observable<Boolean> = this.loadingSubject.asObservable();
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading: Observable<boolean> = this.loadingSubject.asObservable();
 
-    private isLoggedSubject = new BehaviorSubject<Boolean>(
+    private isLoggedSubject = new BehaviorSubject<boolean>(
         !!localStorage.getItem("TOKEN")
     );
     public isLoggedIn: Observable<
-        Boolean
+        boolean
     > = this.isLoggedSubject.asObservable();
 
     private userSubject = new BehaviorSubject<User>(<User>{});
@@ -34,8 +34,31 @@ export class LoginService {
             resp => {
                 if (resp.success) {
                     localStorage.setItem("TOKEN", resp.token);
-                    this.isLoggedSubject.next(true);
-                    this.userSubject.next(resp.data);
+                    this.setUser(resp.data);
+                    this.router.navigate([""]);
+                } else {
+                    this.errorHandler.setError(resp.message, "login");
+                }
+            },
+            err => {
+                this.errorHandler.setError(
+                    "Temporarily Unavailable. Try again later",
+                    "login"
+                );
+            },
+            () => {
+                this.loadingSubject.next(false);
+            }
+        );
+    }
+
+    loginAsAgent(data: LoginCredentials) {
+        this.loadingSubject.next(true);
+        this.http.post<LoginResponse>("/users/pootaa/sign_in", data).subscribe(
+            resp => {
+                if (resp.success) {
+                    localStorage.setItem("TOKEN", resp.token);
+                    this.setUser(resp.data);
                     this.router.navigate([""]);
                 } else {
                     this.errorHandler.setError(resp.message, "login");
@@ -59,8 +82,7 @@ export class LoginService {
             resp => {
                 if (resp.success) {
                     localStorage.setItem("TOKEN", resp.token);
-                    this.isLoggedSubject.next(true);
-                    this.userSubject.next(resp.data);
+                    this.setUser(resp.data);
                     this.router.navigate([""]);
                 } else {
                     this.errorHandler.setError(resp.message, "register");
@@ -78,8 +100,41 @@ export class LoginService {
         );
     }
 
+    registerAsAgent(data: FormData) {
+        this.loadingSubject.next(true);
+        this.http
+            .post<RegisterResponse>("/users/pootaa/sign_up", data)
+            .subscribe(
+                resp => {
+                    if (resp.success) {
+                        localStorage.setItem("TOKEN", resp.token);
+                        this.setUser(resp.data);
+                        this.router.navigate([""]);
+                    } else {
+                        this.errorHandler.setError(resp.message, "register");
+                    }
+                },
+                err => {
+                    this.errorHandler.setError(
+                        "Temporarily Unavailable. Try again later",
+                        "register"
+                    );
+                },
+                () => {
+                    this.loadingSubject.next(false);
+                }
+            );
+    }
+
+    setUser(data) {
+        localStorage.setItem("USERDATA", JSON.stringify(data));
+        this.isLoggedSubject.next(true);
+        this.userSubject.next(data);
+    }
+
     logout() {
         localStorage.removeItem("TOKEN");
+        localStorage.removeItem("USERDATA");
         this.isLoggedSubject.next(false);
         this.userSubject.next(<User>{});
     }

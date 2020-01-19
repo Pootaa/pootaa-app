@@ -2,6 +2,10 @@
     <div class="login__logo">
         <img src="assets/img/pootaa-color.svg" alt="Pootaa" />
     </div>
+    <div *ngIf="pootaaAgent">
+        <h4>Pootaa Agent Login</h4>
+        <br />
+    </div>
     <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
         <div class="login__input">
             <div>
@@ -37,7 +41,7 @@
                 <input
                     type="password"
                     #password="ngModel"
-                    minlength="5"
+                    minlength="4"
                     name="password"
                     ngModel
                     required
@@ -57,7 +61,7 @@
                         password.invalid &&
                         loginForm.controls.password?.errors?.minlength
                     "
-                    >Password should be at least 5 characters</span
+                    >Password should be at least 4 characters</span
                 >
             </div>
         </div>
@@ -72,6 +76,33 @@
                     height="24px"
                 />
             </button>
+        </div>
+        <br />
+        <div>
+            <small
+                >Don't have an account?&nbsp;<a
+                    [routerLink]="['/auth/register']"
+                    class="primary underline"
+                    >Sign Up</a
+                >
+                instead</small
+            >
+        </div>
+        <div>
+            <small *ngIf="!pootaaAgent"
+                ><a
+                    (click)="switchLogin(true)"
+                    class="primary underline pointer"
+                    >Sign in as an agent</a
+                >
+            </small>
+            <small *ngIf="pootaaAgent"
+                ><a
+                    (click)="switchLogin(false)"
+                    class="primary underline pointer"
+                    >Sign in a user</a
+                >
+            </small>
         </div>
     </form>
     <div class="login__bottom">

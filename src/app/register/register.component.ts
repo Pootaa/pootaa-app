@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthTextService } from "../auth-text.service";
 import { RegisterService } from "./register.service";
-import { StatesResponse } from "./register";
+import { ErrorHandlerService } from "../utils/errors/error-handler.service";
 
 @Component({
     selector: "app-register",
@@ -9,13 +9,28 @@ import { StatesResponse } from "./register";
     styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
-    private title: string[];
-    loading: Boolean;
-    states: StatesResponse[];
+    loading: boolean;
+    states: [];
+    errorType: string;
+    passwordError: boolean;
+
+    register(form) {
+        this.passwordError = false;
+        if (form.status === "VALID") {
+            if (form.value.password !== form.value.confirmPassword) {
+                this.passwordError = true;
+                return false;
+            }
+            const { confirmPassword, ...payload } = form.value;
+            this.registerService.register(payload);
+        }
+        return true;
+    }
 
     constructor(
         private titleService: AuthTextService,
-        private registerService: RegisterService
+        private registerService: RegisterService,
+        private errorHandler: ErrorHandlerService
     ) {}
 
     ngOnInit() {
@@ -29,6 +44,9 @@ export class RegisterComponent implements OnInit {
         });
         this.registerService.states.subscribe(resp => {
             this.states = resp;
+        });
+        this.errorHandler.errors.subscribe(resp => {
+            this.errorType = resp.type;
         });
     }
 }

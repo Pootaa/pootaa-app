@@ -31,6 +31,9 @@ section {
     button {
       width: 48%;
     }
+    &.block{
+      display: block;
+    }
   }
   &__images {
     max-width: 1000px;

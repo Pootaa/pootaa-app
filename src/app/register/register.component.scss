@@ -28,14 +28,20 @@
     flex-wrap: wrap;
     justify-content: space-between;
 
-    input,
-    select {
+    &>div {
+
       width: 100%;
       margin-bottom: 1.5rem;
+      text-align: left;
 
       @media screen and (min-width: 568px) {
         width: 48%;
       }
+    }
+
+    input,
+    select {
+      width: 100%
     }
   }
 
