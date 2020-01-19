@@ -211,6 +211,7 @@
     padding: 1rem;
     background-color: white;
     display: flex;
+    align-items: center;
     max-width: 1100px;
     width: 90%;
     margin: 0 auto 1rem;
@@ -222,8 +223,19 @@
     }
 
     &__name {
-      flex: 0 0 40%;
-      max-width: 40%;
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+
+    &__image{
+      flex: 0 0 10%;
+      display: flex;
+      justify-content: center;
+      img{
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+      }
     }
 
     &__quantity,
@@ -232,4 +244,9 @@
       max-width: 25%;
     }
   }
+}
+
+.justify-center{
+  justify-content: center;
+  margin-bottom: 2rem;
 }

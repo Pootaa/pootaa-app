@@ -132,7 +132,7 @@
                 </div>
                 <div>
                     <input
-                        type="text"
+                        type="date"
                         name="pick_up_date"
                         placeholder="Best Date for Pickup"
                         required
@@ -150,13 +150,20 @@
             </div>
             <div class="hire-form">
                 <div>
-                    <input
-                        type="text"
+                    <select
                         name="pick_up_time"
-                        placeholder="Best Time for Pickup"
-                        required
                         formControlName="pick_up_time"
-                    />
+                        required
+                    >
+                        <option value="" disabled selected hidden
+                            >-Select Pickup Time-</option
+                        >
+                        <option
+                            [value]="time"
+                            *ngFor="let time of timeIntervals"
+                            >{{ time }}</option
+                        >
+                    </select>
                     <span
                         class="form-error"
                         *ngIf="
@@ -207,6 +214,7 @@
                         placeholder="Country"
                         formControlName="delivery_country"
                         disabled
+                        required
                     />
                     <span
                         class="form-error"
@@ -273,6 +281,7 @@
                         name="delivery_address"
                         placeholder="Street Address"
                         formControlName="delivery_address"
+                        required
                     />
                     <span
                         class="form-error"
@@ -289,6 +298,7 @@
                         name="delivery_busstop"
                         placeholder="Nearest Busstop"
                         formControlName="delivery_busstop"
+                        required
                     />
                     <span
                         class="form-error"
@@ -305,6 +315,7 @@
                         name="recipient_name"
                         placeholder="Recipient Name"
                         formControlName="recipient_name"
+                        required
                     />
                     <span
                         class="form-error"
@@ -323,6 +334,7 @@
                         name="recipient_phone"
                         placeholder="Recipient's Phone"
                         formControlName="recipient_phone"
+                        required
                     />
                     <span
                         class="form-error"
@@ -335,10 +347,11 @@
                 </div>
                 <div>
                     <input
-                        type="text"
+                        type="date"
                         name="recipient_date"
                         placeholder="Best Date for Pickup"
                         formControlName="recipient_date"
+                        required
                     />
                     <span
                         class="form-error"
@@ -350,12 +363,20 @@
                     </span>
                 </div>
                 <div>
-                    <input
-                        type="text"
+                    <select
                         name="recipient_time"
-                        placeholder="Best Time for Pickup"
                         formControlName="recipient_time"
-                    />
+                        required
+                    >
+                        <option value="" disabled selected hidden
+                            >-Select Pickup Time-</option
+                        >
+                        <option
+                            [value]="time"
+                            *ngFor="let time of timeIntervals"
+                            >{{ time }}</option
+                        >
+                    </select>
                     <span
                         class="form-error"
                         *ngIf="
@@ -368,14 +389,17 @@
             </div>
             <div class="hire-btn">
                 <a class="hire-back" (click)="goBack()">Back</a>
-                <button class="btn btn__primary" 
-                [disabled]="formData2.invalid || loading" type="submit">
-                <img
-                    *ngIf="loading"
-                    src="assets/img/loading.gif"
-                    alt="Loading..."
-                    height="24px"
-                />
+                <button
+                    class="btn btn__primary"
+                    [disabled]="formData2.invalid || loading"
+                    type="submit"
+                >
+                    <img
+                        *ngIf="loading"
+                        src="assets/img/loading.gif"
+                        alt="Loading..."
+                        height="24px"
+                    />
                     <span *ngIf="!loading">Next</span>
                 </button>
             </div>
@@ -456,7 +480,9 @@
             </div>
             <div class="hire-form__uploads">
                 <div class="hire-form__upload">
-                    <p *ngIf="imageError" class="red"><small>There was an error uploading your image</small></p>
+                    <p *ngIf="imageError" class="red">
+                        <small>There was an error uploading your image</small>
+                    </p>
                     <input
                         type="file"
                         name="image_url"
@@ -465,13 +491,17 @@
                         required
                     />
                     <img
-                    *ngIf="imageLoading"
-                    src="assets/img/loading.gif"
-                    alt="Loading..."
-                    height="18px"
-                    width="18px"
-                />
-                    <img [src]="formImage" alt="Pootaa Item Image" *ngIf="formImage && !imageLoading">
+                        *ngIf="imageLoading"
+                        src="assets/img/loading.gif"
+                        alt="Loading..."
+                        height="18px"
+                        width="18px"
+                    />
+                    <img
+                        [src]="formImage"
+                        alt="Pootaa Item Image"
+                        *ngIf="formImage && !imageLoading"
+                    />
                     <label for="photo" class="caution"
                         >+ <br />Upload&nbsp;Item<br />
                         Photos</label
@@ -505,6 +535,9 @@
                 <div class="hire-item__name">
                     <h5>{{ index + 1 }}.&nbsp;&nbsp;{{ item.item }}</h5>
                 </div>
+                <div class="hire-item__image">
+                    <img [src]="item.image_url" [alt]="item.item" />
+                </div>
                 <div class="hire-item__quantity">
                     <h5>{{ item.quantity }}</h5>
                 </div>
@@ -524,26 +557,39 @@
                     class="btn btn__primary"
                     type="button"
                     (click)="submitUploads()"
-                    [disabled]="items.length === 0"
+                    [disabled]="items.length === 0 || loading"
                 >
-                    Next
+                    <img
+                        *ngIf="loading"
+                        src="assets/img/loading.gif"
+                        alt="Loading..."
+                        height="24px"
+                    />
+                    <span *ngIf="!loading">Next</span>
                 </button>
             </div>
         </form>
     </div>
     <div *ngIf="activeTab === 4" class="hire-section">
-        <h5>Delivery Address</h5>
+        <h5>Make Payment</h5>
         <form>
-            <div class="hire-form">
-                Payment Integration
+            <div class="hire-form justify-center">
+                <h4>{{ paymentText }}</h4>
             </div>
             <div class="hire-btn">
                 <button
                     class="btn btn__primary"
                     type="button"
+                    [disabled]="loading"
                     [routerLink]="['/hire-success']"
                 >
-                    Finish
+                    <img
+                        *ngIf="loading"
+                        src="assets/img/loading.gif"
+                        alt="Loading..."
+                        height="24px"
+                    />
+                    <span *ngIf="!loading">Finish</span>
                 </button>
             </div>
         </form>

@@ -8,15 +8,17 @@ import { Observable } from "rxjs";
 })
 export class HttpService {
     baseURL: string = "https://poota-api.herokuapp.com/";
+    private headers: HttpHeaders
     constructor(
         private http: HttpClient,
         private errorHandler: ErrorHandlerService
     ) {}
 
     createAuthorizationHeader(headers: HttpHeaders) {
+        this.headers = new HttpHeaders()
         this.errorHandler.resetError();
         const token = localStorage.getItem("TOKEN");
-        if (token) headers.append("Authorization", "Bearer " + token);
+        if (token) this.headers = this.headers.append("Authorization", "Bearer " + token);
     }
 
     post<T>(url, data): Observable<T> {
@@ -29,7 +31,7 @@ export class HttpService {
         }
         this.createAuthorizationHeader(headers);
         return this.http.post<T>(tempUrl, data, {
-            headers
+            headers: this.headers
         });
     }
 
@@ -43,7 +45,7 @@ export class HttpService {
         }
         this.createAuthorizationHeader(headers);
         return this.http.patch<T>(tempUrl, data, {
-            headers
+            headers: this.headers
         });
     }
 
@@ -56,6 +58,7 @@ export class HttpService {
             tempUrl = this.baseURL + url.substr(1);
         }
         this.createAuthorizationHeader(headers);
-        return this.http.get<T>(tempUrl, { headers });
+        return this.http.get<T>(tempUrl, { 
+            headers: this.headers });
     }
 }

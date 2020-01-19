@@ -110,7 +110,34 @@
             </div>
         </div> -->
         <div class="nav-right">
-            <ul class="nav-right__ul">
+            <ul class="nav-right__ul" *ngIf="loggedIn">
+                <li class="nav-right__item">
+                    <a
+                        class="nav-right__link"
+                        [routerLink]="['/about']"
+                        routerLinkActive="active-link"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        >About</a
+                    >
+                </li>
+                <li class="nav-right__item">
+                    <a
+                        class="nav-right__link"
+                        [routerLink]="['/listings']"
+                        routerLinkActive="active-link"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                        >Package List</a
+                    >
+                </li>
+                <li class="nav-right__item dropdown">
+                     <p class="dropbtn">Welcome {{ user?.first_name }}</p>
+                        <div class="dropdown-content">
+                          <a [routerLink]="['/edit-profile']" routerLinkActive="router-link-active" >Edit Profile</a>
+                          <a [routerLink]="['/logout']">Logout</a>
+                        </div>
+                </li>
+            </ul>
+            <ul class="nav-right__ul" *ngIf="!loggedIn">
                 <li class="nav-right__item">
                     <a
                         class="nav-right__link"
@@ -129,10 +156,7 @@
                         >Contact</a
                     >
                 </li>
-                <li class="nav-right__item" *ngIf="loggedIn">
-                    Welcome {{ user?.first_name }}
-                </li>
-                <li class="nav-right__item" *ngIf="!loggedIn">
+                <li class="nav-right__item">
                     <a
                         class="btn btn__primary--outline"
                         [routerLink]="['/auth/login']"

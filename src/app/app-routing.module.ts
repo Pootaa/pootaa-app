@@ -63,11 +63,13 @@ const routes: Routes = [
     },
     {
         path: "hire-success",
-        component: HireSuccessComponent
+        component: HireSuccessComponent,
+        canActivate: [AuthModuleService]
     },
     {
         path: "listings",
-        component: PackageListingsComponent
+        component: PackageListingsComponent,
+        canActivate: [AuthModuleService]
     },
     {
         path: "edit-profile",

@@ -14,11 +14,11 @@ export class BecomePootaaComponent implements OnInit {
     states: [];
     lgas: string[];
     banks: [] = (allBanks as any).default;
-    loading: Boolean;
+    loading: boolean;
     errorType: string;
-    passwordError: Boolean;
-    photoUploadError: Boolean = false;
-    idUploadError: Boolean = false;
+    passwordError: boolean;
+    photoUploadError: boolean = false;
+    idUploadError: boolean = false;
     photoUploadFile;
     idUploadFile;
     formData: FormData = new FormData();
@@ -49,7 +49,7 @@ export class BecomePootaaComponent implements OnInit {
             this.formData.append("image", this.photoUploadFile);
             this.formData.append("image", this.idUploadFile);
             const { confirmPassword, ...payload } = form.value;
-            Object.entries(<Object>payload).forEach(([key, value]) => {
+            Object.entries(<object>payload).forEach(([key, value]) => {
                 this.formData.append(key, value);
             });
             this.loginService.registerAsAgent(this.formData);

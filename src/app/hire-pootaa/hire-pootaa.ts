@@ -1,6 +1,6 @@
 interface HirePootaaResponse {
     track_id: string;
-    success: Boolean;
+    success: boolean;
     message?: string;
 }
 
@@ -31,14 +31,33 @@ interface UploadImageResponse {
     format: string;
     resource_type: string;
     created_at: Date;
-    tags: Object[];
+    tags: object[];
     bytes: number;
     type: string;
     etag: string;
-    placeholder: Boolean | string;
+    placeholder: boolean | string;
     url: string;
     secure_url: string;
     original_filename: string;
 }
 
-export { HirePootaaRequest, HirePootaaResponse, UploadImageResponse };
+interface HirePootaaItems{
+    item: string;
+    quantity: number;
+    cost: number;
+    instructions: string;
+    image_url: string;
+}
+
+interface MakePaymentRequest {
+    track_id: string;
+    payment_option: string;
+    reference: string
+}
+
+interface MakePaymentResponse {
+    success: boolean,
+    message:string
+}
+
+export { HirePootaaRequest, HirePootaaResponse, UploadImageResponse, HirePootaaItems, MakePaymentRequest, MakePaymentResponse };

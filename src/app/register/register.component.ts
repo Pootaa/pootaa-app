@@ -9,10 +9,10 @@ import { ErrorHandlerService } from "../utils/errors/error-handler.service";
     styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
-    loading: Boolean;
+    loading: boolean;
     states: [];
     errorType: string;
-    passwordError: Boolean;
+    passwordError: boolean;
 
     register(form) {
         this.passwordError = false;

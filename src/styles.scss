@@ -81,16 +81,16 @@ section {
   text-align: right;
 }
 
+.text-center {
+  text-align: center !important;
+}
+
 .primary {
   color: $primary
 }
 
 .underline {
   text-decoration: underline;
-}
-
-.text-center {
-  text-align: center !important;
 }
 
 .pointer {

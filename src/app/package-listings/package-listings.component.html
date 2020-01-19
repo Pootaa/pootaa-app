@@ -4,13 +4,24 @@
             Package Listings
         </h1>
         <p>
-            Montior your packages and get relevant information and also delivery status of you packages, lorem ipsum
-            dolor sit amet,
-            consectetur adipiscing elit
+            Montior your packages and get relevant information and also delivery
+            status of you packages, lorem ipsum dolor sit amet, consectetur
+            adipiscing elit
         </p>
     </section>
 
-    <app-package-cards *ngFor="let i of arr;let j = index">
-        {{i}}, {{j}}
+    <section>
+        <app-error-block *ngIf="errorType === 'listings'"></app-error-block>
+
+        <div class="text-center" *ngIf="listings.length <= 0 && !loading">
+            <div class="package-box">
+                <img src="assets/img/pootaa-package.svg" alt="Package" />
+            </div>
+            You have no package in your list currently
+        </div>
+    </section>
+
+    <app-package-cards *ngFor="let i of arr; let j = index">
+        {{ i }}, {{ j }}
     </app-package-cards>
 </app-layout>

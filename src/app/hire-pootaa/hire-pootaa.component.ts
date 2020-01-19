@@ -3,9 +3,11 @@ import { RegisterService } from "../register/register.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HirePootaaService } from "./hire-pootaa.service";
 import { environment } from "../../environments/environment";
-import { User } from '../login/login';
-import { LoginService } from '../login/login.service';
-import { HirePootaaRequest } from './hire-pootaa';
+import { User } from "../login/login";
+import { LoginService } from "../login/login.service";
+import { HirePootaaRequest, HirePootaaItems } from "./hire-pootaa";
+import { ErrorHandlerService } from "../utils/errors/error-handler.service";
+import * as timePeriods from "../utils/timePeriods.json";
 
 @Component({
     selector: "app-hire-pootaa",
@@ -14,19 +16,21 @@ import { HirePootaaRequest } from './hire-pootaa';
 })
 export class HirePootaaComponent implements OnInit {
     activeTab: number = 1;
-    loading: Boolean = false;
-    states: Object[];
+    timeIntervals: string[] = (timePeriods as any).default;
+    loading: boolean = false;
+    states: object[];
     lgas: string[];
-    user: User = <User>{}
-    trackID: String
+    user: User = <User>{};
+    trackID: string;
     imageLoading: boolean = false;
     imageError: boolean = false;
-    items: object[] = [];
-    hireForm: Object[] = [];
+    items: HirePootaaItems[] = [];
+    hireForm: object[] = [];
     formData1: FormGroup;
     formData2: FormGroup;
     formData3: FormGroup;
     formImage: any;
+    paymentText: string = "Complete Your Transaction";
 
     goToNextTab() {
         if (this.activeTab < 4) {
@@ -41,6 +45,7 @@ export class HirePootaaComponent implements OnInit {
     }
 
     step1(form) {
+        this.errorHandler.resetError();
         if (this.formData1.valid) {
             this.hireForm.push(form);
             this.goToNextTab();
@@ -49,20 +54,39 @@ export class HirePootaaComponent implements OnInit {
     }
 
     step2(form) {
+        this.errorHandler.resetError();
         if (this.formData2.valid) {
-            this.hireForm.push(form)
-            const payload: HirePootaaRequest = <HirePootaaRequest>{}
-            this.hireForm.forEach(el=>{
-                Object.entries(el).forEach(([key, value])=>{
-                    payload[key] = value
-                })
-            })
-            this.loading = true
-            this.hireService.hirePootaa(payload).subscribe(resp=> {
-                this.loading = false
-                this.trackID = resp
-                this.goToNextTab()
-            })
+            this.hireForm.push(form);
+            const payload: HirePootaaRequest = <HirePootaaRequest>{};
+            this.hireForm.forEach(el => {
+                Object.entries(el).forEach(([key, value]) => {
+                    if (key === "pick_up_date" || key === "recipient_date") {
+                        payload[key] = value
+                            .split("-")
+                            .reverse()
+                            .join("-");
+                    } else {
+                        payload[key] = value;
+                    }
+                });
+            });
+            this.loading = true;
+            this.hireService.hirePootaa(payload).subscribe(
+                resp => {
+                    this.loading = false;
+                    this.trackID = resp;
+                    this.goToNextTab();
+                },
+                err => {
+                    this.errorHandler.setError(
+                        "Temporarily Unavailable. Try again later",
+                        "hire"
+                    );
+                },
+                () => {
+                    this.loading = false;
+                }
+            );
         }
         return true;
     }
@@ -84,20 +108,36 @@ export class HirePootaaComponent implements OnInit {
         this.items.splice(index, 1);
     }
 
-    submitUploads(){
+    submitUploads() {
+        this.errorHandler.resetError();
         // const cost = this.items.reduce((acc,value)=>acc)
-        let cost = 0;
-        this.items.forEach(element => {
-            cost += element.cost
-        });
-        if(this.items.length > 0){
-            this.goToNextTab()
-            this.makeTransaction(cost)
+        if (this.items.length > 0) {
+            let cost = 0;
+            this.items.forEach(element => {
+                cost += element.cost;
+            });
+            this.loading = true;
+            this.hireService.uploadItems(this.items).subscribe(
+                resp => {
+                    this.goToNextTab();
+                    this.makeTransaction(cost);
+                },
+                err => {
+                    this.errorHandler.setError(
+                        "Temporarily Unavailable. Try again later",
+                        "hire"
+                    );
+                },
+                () => {
+                    this.loading = false;
+                }
+            );
         }
     }
 
-
     makeTransaction(cost: number) {
+        this.loading = true;
+        this.paymentText = "Processing Payment...";
         const handler = PaystackPop.setup({
             key: environment.paystackKey,
             email: this.user.email,
@@ -109,6 +149,32 @@ export class HirePootaaComponent implements OnInit {
             },
             callback: response => {
                 if (response.status === "success") {
+                    const payload = {
+                        track_id: this.trackID || "P484234829",
+                        payment_option: "online",
+                        reference: response.reference
+                    };
+                    this.hireService.makePayment(payload).subscribe(
+                        resp => {
+                            if (resp.success) {
+                                this.paymentText = resp.message;
+                            } else {
+                                this.paymentText =
+                                    "There was an error completing your payment. Please contact help@pootaa.ng";
+                            }
+                        },
+                        err => {
+                            this.paymentText =
+                                "There was an error completing your payment. Please contact support@pootaa.ng";
+                            this.errorHandler.setError(
+                                "Temporarily Unavailable. Try again later",
+                                "hire"
+                            );
+                        },
+                        () => {
+                            this.loading = false;
+                        }
+                    );
                 } else {
                 }
             }
@@ -126,11 +192,11 @@ export class HirePootaaComponent implements OnInit {
         const formData = new FormData();
         formData.append("file", file);
         this.imageLoading = true;
-        this.imageError = false
+        this.imageError = false;
         this.hireService.uploadItemImage(formData).subscribe(
             resp => {
                 this.formImage = resp;
-                this.formData3.patchValue({image_url: resp})
+                this.formData3.patchValue({ image_url: resp });
             },
             err => {
                 this.imageError = true;
@@ -147,13 +213,20 @@ export class HirePootaaComponent implements OnInit {
         this.registerService.getLGAs(state.toLowerCase());
     }
 
+    checkDate(e) {
+        console.log(e.target.valueAsDate);
+        console.log(this.formData1.value.pick_up_date);
+    }
+
     constructor(
         private loginService: LoginService,
         private registerService: RegisterService,
-        private hireService: HirePootaaService
+        private hireService: HirePootaaService,
+        private errorHandler: ErrorHandlerService
     ) {}
 
     ngOnInit() {
+        const today = new Date().toISOString().substring(0,10)
         this.registerService.getStates();
         this.registerService.states.subscribe(resp => {
             this.states = resp;
@@ -161,9 +234,9 @@ export class HirePootaaComponent implements OnInit {
         this.registerService.lgas.subscribe(resp => {
             this.lgas = resp;
         });
-        this.loginService.user.subscribe(resp=>{
-            this.user = resp
-        })
+        this.loginService.user.subscribe(resp => {
+            this.user = resp;
+        });
         const pick_up_add = new FormControl(null, Validators.required);
         const pick_up_country = new FormControl("Nigeria", Validators.required);
         const pick_up_state = new FormControl("", Validators.required);
@@ -172,8 +245,8 @@ export class HirePootaaComponent implements OnInit {
             null,
             Validators.required
         );
-        const pick_up_date = new FormControl(null, Validators.required);
-        const pick_up_time = new FormControl(null, Validators.required);
+        const pick_up_date = new FormControl(today, Validators.required);
+        const pick_up_time = new FormControl("", Validators.required);
         const phone = new FormControl(null, Validators.required);
         this.formData1 = new FormGroup({
             pick_up_add,
@@ -196,8 +269,8 @@ export class HirePootaaComponent implements OnInit {
         const delivery_busstop = new FormControl(null, Validators.required);
         const recipient_name = new FormControl(null, Validators.required);
         const recipient_phone = new FormControl(null, Validators.required);
-        const recipient_date = new FormControl(null, Validators.required);
-        const recipient_time = new FormControl(null, Validators.required);
+        const recipient_date = new FormControl(today, Validators.required);
+        const recipient_time = new FormControl("", Validators.required);
         this.formData2 = new FormGroup({
             delivery_address,
             delivery_busstop,
@@ -222,7 +295,5 @@ export class HirePootaaComponent implements OnInit {
             instructions,
             image_url
         });
-
-        this.makeTransaction(100)
     }
 }

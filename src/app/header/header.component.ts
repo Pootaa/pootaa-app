@@ -9,9 +9,9 @@ import { User } from "../login/login";
     styleUrls: ["./header.component.scss"]
 })
 export class HeaderComponent implements OnInit {
-    invert: Boolean = false;
-    sidebar: Boolean = false;
-    loggedIn: Boolean;
+    invert: boolean = false;
+    sidebar: boolean = false;
+    loggedIn: boolean;
     user: User;
 
     showSidebar() {

@@ -15,14 +15,14 @@ import { Observable, BehaviorSubject } from "rxjs";
     providedIn: "root"
 })
 export class LoginService {
-    private loadingSubject = new BehaviorSubject<Boolean>(false);
-    public loading: Observable<Boolean> = this.loadingSubject.asObservable();
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading: Observable<boolean> = this.loadingSubject.asObservable();
 
-    private isLoggedSubject = new BehaviorSubject<Boolean>(
+    private isLoggedSubject = new BehaviorSubject<boolean>(
         !!localStorage.getItem("TOKEN")
     );
     public isLoggedIn: Observable<
-        Boolean
+        boolean
     > = this.isLoggedSubject.asObservable();
 
     private userSubject = new BehaviorSubject<User>(<User>{});

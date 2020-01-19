@@ -10,8 +10,8 @@ import { LoginService } from "../login/login.service";
     providedIn: "root"
 })
 export class RegisterService {
-    private loadingSubject = new BehaviorSubject<Boolean>(false);
-    public loading: Observable<Boolean> = this.loadingSubject.asObservable();
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading: Observable<boolean> = this.loadingSubject.asObservable();
 
     private statesSubject = new BehaviorSubject<[]>([]);
     public states: Observable<[]> = this.statesSubject.asObservable();

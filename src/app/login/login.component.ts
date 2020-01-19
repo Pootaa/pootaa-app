@@ -9,9 +9,9 @@ import { ErrorHandlerService } from "../utils/errors/error-handler.service";
     styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
-    loading: Boolean;
+    loading: boolean;
     errorType: string;
-    pootaaAgent: Boolean = false;
+    pootaaAgent: boolean = false;
     constructor(
         private titleService: AuthTextService,
         private loginService: LoginService,
