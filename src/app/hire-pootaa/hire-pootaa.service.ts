@@ -47,14 +47,12 @@ export class HirePootaaService {
             );
     }
 
-    uploadItemImage(data: FormData): Observable<string> {
+    uploadItemImage(data: FormData): Observable<{secure_url: string}> {
         const url = `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`;
         data.append("upload_preset", this.uploadPreset);
         data.append("folder", "pootaa");
         return this.http.post<UploadImageResponse>(url, data).pipe(
-            map(resp => {
-                return resp.secure_url;
-            })
+            map(resp => resp)
         );
     }
 

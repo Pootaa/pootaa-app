@@ -7,6 +7,7 @@ import { User } from "../login/login";
 import { LoginService } from "../login/login.service";
 import { HirePootaaRequest, HirePootaaItems } from "./hire-pootaa";
 import { ErrorHandlerService } from "../utils/errors/error-handler.service";
+import { PaystackOptions } from "angular4-paystack";
 import * as timePeriods from "../utils/timePeriods.json";
 
 @Component({
@@ -31,6 +32,8 @@ export class HirePootaaComponent implements OnInit {
     formData3: FormGroup;
     formImage: any;
     paymentText: string = "Complete Your Transaction";
+    paymentCost: number;
+    paymentRef: string;
 
     goToNextTab() {
         if (this.activeTab < 4) {
@@ -73,7 +76,6 @@ export class HirePootaaComponent implements OnInit {
             this.loading = true;
             this.hireService.hirePootaa(payload).subscribe(
                 resp => {
-                    this.loading = false;
                     this.trackID = resp;
                     this.goToNextTab();
                 },
@@ -110,19 +112,23 @@ export class HirePootaaComponent implements OnInit {
 
     submitUploads() {
         this.errorHandler.resetError();
-        // const cost = this.items.reduce((acc,value)=>acc)
         if (this.items.length > 0) {
-            let cost = 0;
-            this.items.forEach(element => {
-                cost += element.cost;
-            });
+            this.paymentCost = 0;
+            this.paymentCost = this.items.reduce(
+                (acc, item) => acc + item.cost,
+                0
+            );
+            // this.items.forEach(element => {
+            //     this.paymentCost += element.cost;
+            // });
             this.loading = true;
             this.hireService.uploadItems(this.items).subscribe(
                 resp => {
                     this.goToNextTab();
-                    this.makeTransaction(cost);
+                    this.makeTransaction();
                 },
                 err => {
+                    this.loading = false;
                     this.errorHandler.setError(
                         "Temporarily Unavailable. Try again later",
                         "hire"
@@ -135,51 +141,66 @@ export class HirePootaaComponent implements OnInit {
         }
     }
 
-    makeTransaction(cost: number) {
+    paymentInit() {
+        // console.log("Payment initialized");
+    }
+
+    paymentDone(response: {
+        reference: string;
+        trans: string;
+        status: string;
+        message: string;
+        transaction: string;
+        trxref: string;
+    }) {
+        if (response.status === "success") {
+            const payload = {
+                track_id: this.trackID || "P484234829",
+                payment_option: "online",
+                reference: response.reference
+            };
+            this.hireService.makePayment(payload).subscribe(
+                resp => {
+                    if (resp.success) {
+                        this.paymentText = resp.message;
+                    } else {
+                        this.paymentText =
+                            "There was an error completing your payment. Please contact help@pootaa.ng";
+                    }
+                },
+                err => {
+                    this.loading = false;
+                    this.paymentText =
+                        "There was an error completing your payment. Please contact support@pootaa.ng";
+                    this.errorHandler.setError(
+                        "Temporarily Unavailable. Try again later",
+                        "hire"
+                    );
+                },
+                () => {
+                    this.loading = false;
+                }
+            );
+        } else {
+            this.paymentText =
+                "There was an error completing your payment. Please contact support@pootaa.ng";
+            this.errorHandler.setError(
+                "Temporarily Unavailable. Try again later",
+                "hire"
+            );
+            this.loading = false;
+        }
+    }
+
+    paymentCancel() {
+        this.loading = false;
+    }
+
+    makeTransaction() {
         this.loading = true;
         this.paymentText = "Processing Payment...";
-        const handler = PaystackPop.setup({
-            key: environment.paystackKey,
-            email: this.user.email,
-            amount: cost * 100,
-            firstname: this.user.first_name,
-            lastname: this.user.last_name,
-            onClose: resp => {
-                this.loading = false;
-            },
-            callback: response => {
-                if (response.status === "success") {
-                    const payload = {
-                        track_id: this.trackID || "P484234829",
-                        payment_option: "online",
-                        reference: response.reference
-                    };
-                    this.hireService.makePayment(payload).subscribe(
-                        resp => {
-                            if (resp.success) {
-                                this.paymentText = resp.message;
-                            } else {
-                                this.paymentText =
-                                    "There was an error completing your payment. Please contact help@pootaa.ng";
-                            }
-                        },
-                        err => {
-                            this.paymentText =
-                                "There was an error completing your payment. Please contact support@pootaa.ng";
-                            this.errorHandler.setError(
-                                "Temporarily Unavailable. Try again later",
-                                "hire"
-                            );
-                        },
-                        () => {
-                            this.loading = false;
-                        }
-                    );
-                } else {
-                }
-            }
-        });
-        handler.openIframe();
+        const btn = document.getElementById("paystackBtn");
+        btn.click();
     }
 
     uploadImage(e) {
@@ -195,11 +216,14 @@ export class HirePootaaComponent implements OnInit {
         this.imageError = false;
         this.hireService.uploadItemImage(formData).subscribe(
             resp => {
-                this.formImage = resp;
-                this.formData3.patchValue({ image_url: resp });
+                this.formImage = resp.secure_url;
+                this.formData3.patchValue({ image_url: resp.secure_url });
             },
             err => {
+                this.formImage = null;
                 this.imageError = true;
+                this.imageLoading = false;
+                e.target.value = "";
             },
             () => {
                 this.imageLoading = false;
@@ -213,11 +237,6 @@ export class HirePootaaComponent implements OnInit {
         this.registerService.getLGAs(state.toLowerCase());
     }
 
-    checkDate(e) {
-        console.log(e.target.valueAsDate);
-        console.log(this.formData1.value.pick_up_date);
-    }
-
     constructor(
         private loginService: LoginService,
         private registerService: RegisterService,
@@ -226,7 +245,7 @@ export class HirePootaaComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        const today = new Date().toISOString().substring(0,10)
+        const today = new Date().toISOString().substring(0, 10);
         this.registerService.getStates();
         this.registerService.states.subscribe(resp => {
             this.states = resp;
@@ -295,5 +314,27 @@ export class HirePootaaComponent implements OnInit {
             instructions,
             image_url
         });
+        this.generateRef();
+    }
+
+    randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    generateRef() {
+        const timestamp = +new Date();
+        const letters = Math.random()
+            .toString(36)
+            .substr(2, 9)
+            .toUpperCase();
+        var ts = timestamp.toString();
+        var parts = ts.split("").reverse();
+        var id = "";
+
+        for (var i = 0; i < 8; ++i) {
+            var index = this.randomInt(0, parts.length - 1);
+            id += parts[index];
+        }
+        this.paymentRef = letters + id;
     }
 }

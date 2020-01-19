@@ -23,6 +23,8 @@ import { PackageListingsComponent } from "./package-listings/package-listings.co
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
 import { ErrorBlockComponent } from "./error-block/error-block.component";
 import { LogoutComponent } from "./logout/logout.component";
+import { Angular4PaystackModule } from 'angular4-paystack';
+import { environment } from "../environments/environment";
 
 @NgModule({
     declarations: [
@@ -51,7 +53,8 @@ import { LogoutComponent } from "./logout/logout.component";
         AppRoutingModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        Angular4PaystackModule.forRoot(environment.paystackKey)
     ],
     providers: [],
     bootstrap: [AppComponent]

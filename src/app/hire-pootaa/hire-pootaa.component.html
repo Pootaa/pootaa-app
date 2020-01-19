@@ -22,6 +22,19 @@
             </div>
         </div>
     </section>
+    <button
+    style="display: none;"
+        id="paystackBtn"
+        angular4-paystack
+        [ref]="paymentRef"
+        [email]="user?.email"
+        [amount]="paymentCost * 100"
+        (paymentInit)="paymentInit()"
+        (close)="paymentCancel()"
+        (callback)="paymentDone($event)"
+    >
+        Pay with Paystack
+    </button>
 
     <div *ngIf="activeTab === 1" class="hire-section">
         <h5>Pick Up Address</h5>
